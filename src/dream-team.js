@@ -1,16 +1,21 @@
 const CustomError = require("../extensions/custom-error");
 
 module.exports = function createDreamTeam( members) {
-  // throw new CustomError('Not implemented');
   if(Array.isArray(members) && members.length >0){
   let count='';
-  for (i=0; i<members.length; i++){
+  for ( let i=0; i<members.length; i++){
     if(typeof members[i]=='string' ){
-    count=count+members[i][0];
+      members[i]=members[i].split('');
+      for (let j=0; j<members[i].length; j++){
+        if (members[i][0]==' '){ members[i].splice(0,1)
+       }
+      }
+      members[i]=members[i].join('');
+      count=count+members[i][0];
     }
   }
   return count.toUpperCase().split('').sort().join('');
-} else{
+ } else{
   return false;
-} 
-};
+ } 
+}
