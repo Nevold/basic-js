@@ -1,53 +1,43 @@
-const CustomError = require("../extensions/custom-error");
+const CustomError = require('../extensions/custom-error');
 
 module.exports = function transform(arr) {
+  if (!Array.isArray(arr)) {
+    throw Error;
+  } else if (arr.length == 0) {
+    return arr;
+  }
 
-  if(!Array.isArray(arr)){
-    throw new Error();
-};
- if(arr.length == 0){
-    return [];
- };
-   
+  let result = [];
 
-  let arrDiscardNext=arr.slice();
-  for (let i=0;i < arrDiscardNext.length;i++){
-    if(arrDiscardNext[i]=='--discard-next'){
-       arrDiscardNext.splice(i,2); 
+  for (let i = 0; i < arr.length; i++) {
+    switch (arr[i]) {
+      case '--discard-next':
+        if (arr[i + 2] === '--double-prev' || arr[i + 2] === '--discard-prev') {
+          i += 2;
+        } else {
+          i += 1;
+        }
+        break;
+      case '--discard-prev':
+        if (i > 0) {
+          result.pop();
+        }
+        break;
+      case '--double-next':
+        if (i < arr.length - 1) {
+          result.push(arr[i + 1]);
+        }
+        break;
+      case '--double-prev':
+        if (i > 0) {
+          result.push(arr[i - 1]);
+        }
+        break;
+      default:
+        result.push(arr[i]);
+        break;
     }
   }
 
-  let arrDiscardPrev=arrDiscardNext;
-  for (let i=0;i < arrDiscardPrev.length;i++){
-    if(arrDiscardPrev[i]=='--discard-prev' && i-1 <0){
-       arrDiscardPrev.splice(i,1); 
-    } else if(arrDiscardPrev[i]=='--discard-prev'){
-      arrDiscardPrev.splice(i-1,2)
-    }
-  }
-
-  let arrDoubleNext=arrDiscardPrev;
-    for (let i=0;i < arrDoubleNext.length;i++){
-      if(arrDoubleNext[i]=='--double-next' && arrDoubleNext.length==i+1 ){
-        arrDoubleNext.splice(i,1);break;
-      } else if (arrDoubleNext[i]=='--double-next'){
-        arrDoubleNext.splice(i,1);
-        arrDoubleNext.splice(i,0,arrDoubleNext[i]);
-        }
-    }
-
-  let arrDoublePrev=arrDoubleNext;
-  for (let i=0;i < arrDoublePrev.length;i++){
-      if(arrDoublePrev[i]=='--double-prev' && i-1 <0 ){
-        arrDoublePrev.splice(i,1);break;
-      } else if (arrDoublePrev[i]=='--double-prev'){
-        arrDoublePrev.splice(i,1);
-        arrDoublePrev.splice(i,0,arrDoublePrev[i-1]);
-        }
-    }
-
-  return arrDoublePrev; 
-  
-  
-  
+  return result;
 };
