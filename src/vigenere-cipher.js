@@ -1,14 +1,15 @@
 const CustomError = require('../extensions/custom-error');
 
 class VigenereCipheringMachine {
-  constructor(status) {
-    if (status === false) this.reverse = false;
+  constructor(modification) {
+    if (modification === false) this.reverse = false;
   }
 
   reverse = true;
 
   encrypt(message, key) {
-    if ((message, key === undefined)) throw new Error();
+    if ((message, key === undefined))
+      throw new Error('One or more parameters has not been given');
     const messageUpper = message.toUpperCase(),
       keyUpper = key.toUpperCase();
     let result = '';
@@ -30,7 +31,8 @@ class VigenereCipheringMachine {
     return this.reverse === true ? result : result.split('').reverse().join('');
   }
   decrypt(message, key) {
-    if ((message, key === undefined)) throw new Error();
+    if ((message, key === undefined))
+      throw new Error('One or more parameters has not been given');
     let result = '';
     const keyUpper = key.toUpperCase();
     for (let i = 0, j = 0; i <= message.length - 1; i++) {
